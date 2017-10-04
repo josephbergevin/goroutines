@@ -1,0 +1,188 @@
+Goroutines at Nozzle
+From Basic to Advanced
+2 Oct 2017
+Tags: go, golang, goroutines, channels
+
+Joe Bergevin
+VP of Engineering, Nozzle
+joe@nozzle.io
+https://nozzle.io/about/
+@josephbergevin
+
+* My History With Concurrency
+
+It started in the 9th grade with my TI-81 Graphing Calculator
+
+- Only 6 programming commands (Lbl, Goto, If, Pause, End, Stop)
+  - But it could graph lines simutaneously using functions!
+  - Bring on the horse races!
+- TI-Joe was Born!
+
+.image ./media/ti-81.jpg
+
+* Fast Forward to 2012
+
+Website Crawler Using VBA With Excel
+- Concurrency version #1: Multiple Laptops 
+  - Running across 6 different Laptops
+- Concurrency version #2: 8-Core Desktop Computer
+  - Running across 8 different instances of Excel
+
+* Fast Forward to 2013
+
+- Using PHP
+- Tried Gearman, Task Queues, etc
+- Very expensive and not performant
+- Required extra external infrastructure
+
+* Fast Forward to 2014
+
+- Introduced to Go at Google I/0 - never looked back! (image of Google IO)
+
+
+* Goroutines
+
+* Goroutines: Basic Usage
+
+- Take your average simple program:
+
+.play ./basic/no_goroutines/main.go
+
+* Goroutines: Basic Usage
+
+Add some `go` commands where appropriate:
+
+.play ./basic/goroutines/main.go /for/,/}/
+
+* Goroutines: Basic Usage
+
+Add some `go` commands where appropriate:
+
+.play ./basic/goroutines/main.go /for/,/}/
+
+uh oh... Where did your data go???
+
+.iframe https://assets.teenvogue.com/photos/579a4bc79e016460296a163d/master/pass/02_Stranger-Things.gif
+
+Your data is now in the Upside Down!
+
+* Goroutines: Basic Usage
+
+Introducing `sync.WaitGroup`:
+
+.play ./basic/goroutines_waitgroups_bad/main.go /^func main/,/^}/
+
+The data is back! Or is it....
+
+- Why are all the results the same?
+
+* Goroutines: Basic Usage
+
+Introducing `sync.WaitGroup`... take two...
+
+.play ./basic/goroutines_waitgroups/main.go /^func main/,/^}/
+
+ah, there's our data...
+
+- Why is the print order random?
+
+
+* Goroutines: Using Channels
+
+* Channels
+
+What is a Channel?
+
+- A typed conduit through which you can send and receive values with the channel operator, <-.
+
+.caption _See_ [[https://tour.golang.org/concurrency/2][A Tour of Go: Channels]]
+
+.play ./basic/channels/buffered/main.go
+
+Simple enough, right?
+
+* Channels Categorized
+
+What are the different ways we can use a channel?
+
+- To Pass Data (gif for I/O)
+- To Send a Signal (gif for signalling)
+
+* Channels: Sending/Receiving Data
+
+Buffered Channels
+- _Sends_ to a buffered channel block only when the buffer is full. 
+- _Receives_ block when the buffer is empty.
+
+What does it mean to block?
+.play -edit ./basic/channels/buffered_bad/main.go
+
+* Channels: Sending/Receiving Data
+
+Receiving on a Data Channel
+
+- How many goroutines can receive on a data channel? _Unlimited._
+- How many times can a value in a channel be received? _Once._
+
+.image ./media/may-i-have-some-more.jpg
+
+* Channels: Sending/Receiving Signals
+
+Using a channel to send a signal to many listeners at once
+- How many goroutines can receive on a signal channel? _Unlimited._
+- How many times can a signal be received? _Unlimited._
+- How do I send a signal through a Signal Channel? _close(mySignal)_
+
+Perfect example from the standard library: Context (Cancel/Done)
+.caption _See_ [[https://golang.org/pkg/context/][standard lib: context]]
+
+* Channels: Sending/Receiving Signals
+
+A Signal Channel In Action
+
+.play ./basic/channels/signalling/main.go
+
+- More to come in the final example...
+
+
+* Goroutines & Channels: a match made in heaven
+
+* Goroutines & Channels: Intermediate Usage
+
+The most common way we use goroutines at Nozzle is with an error channel
+
+.code ./intermediate/waitgroups_errchan/main.go /errChan :=/
+
+.code ./intermediate/waitgroups_errchan/main.go /if err != nil/,/}/
+
+VS
+
+.code ./intermediate/throttler/main.go /th.Done/
+
+.caption see code examples at  [[https://github.com/josephbergevin/goroutines/intermediate][github]]
+
+* Goroutines & Channels: Advanced Usage
+
+Nozzle Lumber Inc
+
+- Mission Statement: produce quality lumber from crappy ol' timber.
+
+* Goroutines & Channels: Nozzle Lumber Inc
+
+The Lumber Worker
+.code ./advanced/lumber_working_team/main.go /^func lumberWorker/,/^}/
+
+* Goroutines & Channels: Nozzle Lumber Inc
+
+The Lumber Controller
+.code ./advanced/lumber_working_team/main.go /^func lumberController/,/^}/
+
+* Goroutines & Channels: Nozzle Lumber Inc
+
+The Shift Manager
+.code ./advanced/lumber_working_team/main.go /^func shiftManager/,/^}/
+
+* Goroutines & Channels: Nozzle Lumber Inc
+
+The Powers that Be (main func)
+.play ./advanced/lumber_working_team/main.go /^func main/,/^}/
