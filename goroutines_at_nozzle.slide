@@ -14,7 +14,7 @@ https://nozzle.io/about/
 It started in the 9th grade with my TI-81 Graphing Calculator
 
 - Only 6 programming commands (Lbl, Goto, If, Pause, End, Stop)
-  - But it could graph lines simutaneously using functions!
+  - But it could graph lines simutaneously using functions to graph at a random rate...
   - Bring on the horse races!
 - TI-Joe was Born!
 
@@ -23,6 +23,7 @@ It started in the 9th grade with my TI-81 Graphing Calculator
 * Fast Forward to 2012
 
 Website Crawler Using VBA With Excel
+
 - Concurrency version #1: Multiple Laptops 
   - Running across 6 different Laptops
 - Concurrency version #2: 8-Core Desktop Computer
@@ -37,14 +38,14 @@ Website Crawler Using VBA With Excel
 
 * Fast Forward to 2014
 
-- Introduced to Go at Google I/0 - never looked back! (image of Google IO)
+Introduced to Go at Google I/0 - never looked back!
 
 
 * Goroutines
 
 * Goroutines: Basic Usage
 
-- Take your average simple program:
+Take your average simple program:
 
 .play ./basic/no_goroutines/main.go
 
@@ -105,12 +106,13 @@ Simple enough, right?
 
 What are the different ways we can use a channel?
 
-- To Pass Data (gif for I/O)
-- To Send a Signal (gif for signalling)
+- To Pass Data
+- To Send a Signal
 
 * Channels: Sending/Receiving Data
 
 Buffered Channels
+
 - _Sends_ to a buffered channel block only when the buffer is full. 
 - _Receives_ block when the buffer is empty.
 
@@ -124,11 +126,18 @@ Receiving on a Data Channel
 - How many goroutines can receive on a data channel? _Unlimited._
 - How many times can a value in a channel be received? _Once._
 
-.image ./media/may-i-have-some-more.jpg
+Specifying _Receive-only_ or _Send-only_ Channels
+
+- This is to be specified in the signature of the function receiving the channel:
+  - Receive-only: func foo(intChan <-chan int)
+  - Send-only: func bar(intChan chan<- int)
+
+# .image ./media/may-i-have-some-more.jpg
 
 * Channels: Sending/Receiving Signals
 
 Using a channel to send a signal to many listeners at once
+
 - How many goroutines can receive on a signal channel? _Unlimited._
 - How many times can a signal be received? _Unlimited._
 - How do I send a signal through a Signal Channel? _close(mySignal)_
@@ -167,6 +176,19 @@ Nozzle Lumber Inc
 
 - Mission Statement: produce quality lumber from crappy ol' timber.
 
+On the Team:
+
+- The Shift Manager
+  - Creates the channels (river channel, lumber-truck channel)
+  - Kicks off the Lumber Controller and 3 Lumber Workers
+- The Lumber Controller
+  - Sends timber down the river to be turned into lumber
+  - Receives lumber from the lumber-trucks
+- The Lumber Workers
+  - Receive timber from the river
+  - Turn the timber into lumber
+  - Send off the lumber on the lumber-trucks
+
 * Goroutines & Channels: Nozzle Lumber Inc
 
 The Lumber Worker
@@ -175,7 +197,12 @@ The Lumber Worker
 * Goroutines & Channels: Nozzle Lumber Inc
 
 The Lumber Controller
-.code ./advanced/lumber_working_team/main.go /^func lumberController/,/^}/
+.code ./advanced/lumber_working_team/main.go /^func lumberController/,/reportsReceived/
+
+* Goroutines & Channels: Nozzle Lumber Inc
+
+The Lumber Controller (cont'd)
+.code ./advanced/lumber_working_team/main.go /reportsReceived/,/^}/
 
 * Goroutines & Channels: Nozzle Lumber Inc
 
